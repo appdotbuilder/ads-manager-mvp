@@ -1,7 +1,21 @@
+import { db } from '../db';
+import { adSetsTable } from '../db/schema';
 import { type AdSet } from '../schema';
 
 export const getAdSets = async (): Promise<AdSet[]> => {
-  // This is a placeholder implementation! Real code should be implemented here.
-  // The goal of this handler is fetching all ad sets from the database.
-  return [];
+  try {
+    const results = await db.select()
+      .from(adSetsTable)
+      .execute();
+
+    // Convert numeric fields back to numbers
+    return results.map(adSet => ({
+      ...adSet,
+      daily_budget: parseFloat(adSet.daily_budget),
+      spend: parseFloat(adSet.spend)
+    }));
+  } catch (error) {
+    console.error('Failed to fetch ad sets:', error);
+    throw error;
+  }
 };

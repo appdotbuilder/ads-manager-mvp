@@ -1,7 +1,29 @@
+import { db } from '../db';
+import { campaignsTable } from '../db/schema';
 import { type Campaign, type IdInput } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const getCampaignById = async (input: IdInput): Promise<Campaign | null> => {
-  // This is a placeholder implementation! Real code should be implemented here.
-  // The goal of this handler is fetching a specific campaign by ID from the database.
-  return null;
+  try {
+    const result = await db.select()
+      .from(campaignsTable)
+      .where(eq(campaignsTable.id, input.id))
+      .execute();
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    const campaign = result[0];
+    
+    // Convert numeric fields back to numbers
+    return {
+      ...campaign,
+      total_budget: parseFloat(campaign.total_budget),
+      spend: parseFloat(campaign.spend)
+    };
+  } catch (error) {
+    console.error('Failed to fetch campaign by ID:', error);
+    throw error;
+  }
 };

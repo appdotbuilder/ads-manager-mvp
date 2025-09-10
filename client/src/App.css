@@ -129,3 +129,13 @@ p.description {
   text-decoration: none;
   font-weight: bold;
 }
+
+/* Utility classes */
+@layer utilities {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
